@@ -1,0 +1,1 @@
+Contient l'ensemble des applications développées pour Stela Produits Pétroliers.
