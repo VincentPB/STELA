@@ -1,7 +1,4 @@
-﻿#Importe un fichier .xlsx puis détecte l'opération à appliquer
-#pour ensuite supprimer les douablons.
-
-#=============================== IMPORTS =================================#
+﻿#=============================== IMPORTS =================================#
 
 import sys
 import os
@@ -36,6 +33,7 @@ def traitement(lbl1): #Lance le traitement du fichier
         showDialog()
 
 def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None, truncate_sheet=False, **to_excel_kwargs):
+    #Ecrit une dataFrame dans un fichier excel existant
     
     if 'engine' in to_excel_kwargs:
         to_excel_kwargs.pop('engine')
@@ -145,7 +143,7 @@ def deboublonner(doc, indCrit, titre):
 
 def showDialog(): #PopUp de fin de traitement
     msgBox = QMessageBox()
-    msgBox.setGeometry(475,330, 200, 200)
+    msgBox.setGeometry(735,430, 200, 200)
     msgBox.setText("<p align='center'>Le dédoublonnage a été effectué avec succès </p>")
     msgBox.setWindowTitle("Traitement terminé")
     msgBox.setFont(QFont("Calibri", 11, QFont.Bold))
@@ -154,7 +152,7 @@ def showDialog(): #PopUp de fin de traitement
     " font: bold 14px;"
     " min-width: 10em;"
     " padding: 3px;"
-    " margin-right:4.5em;"
+    " margin-right:6.3em;"
     "}"
     "* {"
     " margin-right:1.8em;"
@@ -165,7 +163,7 @@ def showDialog(): #PopUp de fin de traitement
 
 def aProposDe(): #PopUp 'A propos'
     msgBox = QMessageBox()
-    msgBox.setGeometry(487,330, 200, 200)
+    msgBox.setGeometry(750,430, 200, 200)
     msgBox.setText("<p align='center'>Cette application est une propriété</p> \n <p align='center'>Stela Produits Pétroliers</p>")
     msgBox.setWindowTitle("A propos")
     msgBox.setFont(QFont("Calibri", 11, QFont.Bold))
@@ -174,7 +172,7 @@ def aProposDe(): #PopUp 'A propos'
     " font: bold 14px;"
     " min-width: 10em;"
     " padding: 3px;"
-    " margin-right:3.5em;"
+    " margin-right:5.8em;"
     "}"
     "* {"
     " margin-right:1.8em;"
@@ -194,7 +192,7 @@ class MyMainWindow(QMainWindow): #Fenêtre
         super(MyMainWindow, self).__init__(parent)
         self.form_widget = Example(self) 
         self.setCentralWidget(self.form_widget)
-        self.setGeometry(400, 250, 500, 250)
+        self.setGeometry(700, 350, 500, 250)
         self.setWindowTitle('Dédoublonnage')
         self.setWindowIcon(QIcon('stela.ico'))
 
