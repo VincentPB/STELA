@@ -1,9 +1,9 @@
 		[ APPLICATION DE DEDOUBLONNAGE CEE ]
 
-Cette application est une propriété de Stela Produits Pétroliers****
+Cette application est une propriÃ©tÃ© de Stela Produits PÃ©troliers
 
 		------------ Description ------------
 
-L'application permet à l'utilisateur d'importer un fichier .xlsx.
-Elle détermine automatiquement le type de fichier importer, filtre 
-les doublons puis créer un nouveau fichier sans doublons.
+L'application permet Ã  l'utilisateur d'importer un fichier .xlsx.
+Elle dÃ©termine automatiquement le type de fichier importer, filtre 
+les doublons puis crÃ©er un nouveau fichier sans doublons.
