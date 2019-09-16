@@ -37,7 +37,7 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None, truncat
     
     if 'engine' in to_excel_kwargs:
         to_excel_kwargs.pop('engine')
-    writer = pd.ExcelWriter(filename, engine='openpyxl')
+    writer = pd.ExcelWriter(filename, engine='openpyxl', datetime_format='d mmm yyyy', date_format='d mmm yyyy')
     try:
         FileNotFoundError
     except NameError:
@@ -107,6 +107,7 @@ def switchOperation(filename): #Applique le traitement correspondant au fichier 
 
 def deboublonner(doc, indCrit, titre):
 
+    global address
     Temps = datetime.datetime.now()
     TempsMax = datetime.datetime(Temps.year-10, Temps.month, Temps.day)
     header=pd.read_excel(doc, nrows=4)
@@ -128,7 +129,7 @@ def deboublonner(doc, indCrit, titre):
     for ind in ListeDoublons:
         d=d.drop(ind)
 
-    PostTra = xlsxwriter.Workbook(titre + '_OVER.xlsx')
+    PostTra = xlsxwriter.Workbook(os.path.dirname(address) + '/' + titre + '_DEDOUBLONNE.xlsx')
     fueillasse = PostTra.add_worksheet(titre)
 
     for h1 in range(header.shape[0]):
@@ -137,7 +138,7 @@ def deboublonner(doc, indCrit, titre):
                 fueillasse.write(h1, h2, header.iloc[h1,h2])
 
     PostTra.close()
-    append_df_to_excel(titre + '_OVER.xlsx', d, sheet_name=titre, startrow=5, index=False)
+    append_df_to_excel(os.path.dirname(address) + '/' + titre + '_DEDOUBLONNE.xlsx', d, sheet_name=titre, startrow=5, index=False)
 
 #=========================== DISPLAY FUNCTION ============================#
 
