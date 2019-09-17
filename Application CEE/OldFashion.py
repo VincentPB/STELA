@@ -1,4 +1,4 @@
-#=============================== IMPORTS =================================#
+﻿#=============================== IMPORTS =================================#
 
 import sys
 import os
@@ -58,49 +58,50 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None, truncat
     df.to_excel(writer, sheet_name, startrow=startrow, **to_excel_kwargs)
     writer.save()
 
-
-def evaluer(indexColumns):
-    indice_NUMs = []
-    indice_DATEs = []
-    Dict_NUM = ['Numéro', 'Numero, NUMERO', 'NUM', 'Num', 'numero', 'num', 'N°', 'n°', 'Nom', 'NOM', 'nom', 'Prénom', 'prénom', 'prenom', 'PRENOM', 'Prenom']
-    Dict_DATE = ['Date', 'DATE', 'date']
-    
-    for i in range (len(indexColumns)):
-        temoinNUM = False
-        temoinDATE = False
-
-        for j in range(len(Dict_NUM)):
-            if(Dict_NUM[j] in indexColumns[i]):
-                temoinNUM = True
-        for k in range(len(Dict_DATE)):
-            if(Dict_DATE[k] in indexColumns[i]):
-                temoinDATE = True
-     
-        if(temoinNUM):
-            indice_NUMs.append(i)
-        if(temoinDATE):
-            indice_DATEs.append(i)
-            
-    return ([indice_NUMs, indice_DATEs])
-
-
 #=========================== OPERATION TREATMENT ============================#
 
 def switchOperation(filename): #Applique le traitement correspondant au fichier importé.
 
     header=str(pd.read_excel(filename, nrows=4))
-    d=pd.read_excel(filename, header=5)
-    indexColumns = d.columns
-    IND = evaluer(indexColumns)
-    deboublonner(filename, IND, os.path.basename(filename)[:-5])
-    print('TRAITEMENT TERMINE')
 
-def condition_date(ListCritDate, TempsMax):
-    temoin = False
-    for elt in ListCritDate:
-        if (elt<TempsMax):
-            temoin = True
-    return temoin
+    if(('115+103' in header) or ('103+115' in header)):
+        deboublonner(filename, [0, 1], 'TRA EQ 115-103')
+        print('TRAITEMENT TERMINE')        
+    elif (("EQ-115" in header) or ("EQ-15" in header)):
+        deboublonner(filename,[0, 1], 'TRA EQ 115')
+        print('TRAITEMENT TERMINE')
+    elif (("EQ-119" in header) or ("EQ-19" in header)):
+        deboublonner(filename, [2, 1], 'TRA EQ 119')
+        print('TRAITEMENT TERMINE')     
+    elif (("EQ-103" in header) and ('SERIE' in header)):
+        deboublonner(filename, [1, 7], 'TRA EQ 103 Serie')
+        print('TRAITEMENT TERMINE')
+    elif (("EQ-103" in header) and ("INTERNE" in header)):
+        deboublonner(filename, [2, 8], 'TRA EQ 103 INT')
+        print('TRAITEMENT TERMINE')
+    elif (("EQ-103" in header) and ("EXTERNE" in header)):
+        deboublonner(filename, [1, 7], 'TRA EQ 103 EXT')
+        print('TRAITEMENT TERMINE')
+    elif (("EQ-101" in header) or ("EQ-01" in header)):
+        deboublonner(filename, [1, 7], 'TRA EQ 101')
+        print('TRAITEMENT TERMINE')   
+    elif (("EQ-111" in header) or ("EQ-11" in header)):
+        deboublonner(filename, [0, 6], 'TRA EQ 111')
+        print('TRAITEMENT TERMINE')
+    elif (("SE-113" in header) or ("SE-13" in header)):
+        deboublonner(filename, [1, 3], 'TRA SE 113')
+        print('TRAITEMENT TERMINE')
+    elif (("SE-108" in header) or ("SE-08" in header)):
+        deboublonner(filename, [1, 5], 'TRA SE 108')
+        print('TRAITEMENT TERMINE')
+    elif (("SE-105" in header) or ("SE-05" in header)):
+        deboublonner(filename, [4, 3], 'TRA SE 105')
+        print('TRAITEMENT TERMINE')
+    elif (("SE-101" in header) or ("SE-01" in header)):
+        deboublonner(filename, [1, 0, 3, 7], 'TRA SE 101')
+        print('TRAITEMENT TERMINE')
+    else:
+        return("OPERATION INVALIDE")
 
 #=============================== PROCESSING =================================#
 
@@ -114,20 +115,20 @@ def deboublonner(doc, indCrit, titre):
     NbRow = d.shape[0]
     NbCol = d.shape[1]
     ListCrit1=[]
-    ListCritDate=[[]]*NbRow
+    ListCritDate=[]
     ListeDoublons = []
-   
+
     for i in range(NbRow):
-        ListCrit1.append(d.iloc[i,indCrit[0][0]])
-        for h in range(len(indCrit[1])):
-            ListCritDate[i].append(d.iloc[i,indCrit[1][h]])
- 
+        ListCrit1.append(d.iloc[i,indCrit[0]])
+        ListCritDate.append(d.iloc[i,indCrit[1]])
+
     for i in range(NbRow-1):
-        if(ListCrit1[i] in (ListCrit1[:i]+ListCrit1[i+1:]) or condition_date(ListCritDate[i], TempsMax)):
+        if(ListCrit1[i] in (ListCrit1[:i]+ListCrit1[i+1:]) or ListCritDate[i]<TempsMax):
             ListeDoublons.append(i)
+
     for ind in ListeDoublons:
         d=d.drop(ind)
-        
+
     PostTra = xlsxwriter.Workbook(os.path.dirname(address) + '/' + titre + '_DEDOUBLONNE.xlsx')
     fueillasse = PostTra.add_worksheet(titre)
 
